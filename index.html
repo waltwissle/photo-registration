@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volume Photography Registration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-container {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .price {
+            text-align: center;
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .radio-group {
+            margin-top: 8px;
+        }
+        .radio-option {
+            margin-bottom: 8px;
+        }
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .confirmation {
+            display: none;
+            background-color: #dff0d8;
+            border: 1px solid #d6e9c6;
+            color: #3c763d;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .photo-code {
+            font-size: 24px;
+            font-weight: bold;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px dashed #ccc;
+            margin: 15px 0;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        .additional-emails {
+            margin-top: 10px;
+        }
+        .additional-email-container {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .additional-email-container input {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        .remove-email {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .add-email {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .section-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+            margin-top: 30px;
+            color: #2c3e50;
+        }
+        #photoCodeField {
+            display: none;
+            margin-top: 15px;
+        }
+        .code-display {
+            background-color: #e8f4f8;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 18px;
+            text-align: center;
+            letter-spacing: 1px;
+            border: 1px solid #bde0ed;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Photography Session Registration</h1>
+        <div class="price">$30</div>
+        
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="fullName" class="required">Full Name</label>
+                <input type="text" id="fullName" name="fullName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email" class="required">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="required">Shoot Category</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="individual" name="shootCategory" value="individual" required>
+                        <label for="individual">Individual Shoot (Solo Portrait)</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="group" name="shootCategory" value="group">
+                        <label for="group">Group Shoot (Group Portrait)</label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="photoCodeField" class="form-group">
+                <label>Your Photo Code:</label>
+                <div class="code-display" id="generatedPhotoCode"></div>
+                <input type="hidden" id="photoCodeInput" name="photoCode">
+            </div>
+            
+            <h3 class="section-header">Additional Contact Information</h3>
+            
+            <div class="form-group">
+                <label for="additionalEmails">Additional Email Contacts</label>
+                <div id="additionalEmails" class="additional-emails"></div>
+                <button type="button" class="add-email" id="addEmailBtn">+ Add Another Email</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone Number (Optional)</label>
+                <input type="tel" id="phone" name="phone">
+            </div>
+            
+            <div class="form-group">
+                <label for="specialRequests">Special Requests or Notes (Optional)</label>
+                <textarea id="specialRequests" name="specialRequests"></textarea>
+            </div>
+            
+            <button type="submit">Submit Registration</button>
+        </form>
+        
+        <div id="confirmation" class="confirmation">
+            <h3>Thank you! Your photo request has been submitted.</h3>
+            <p>Here is your photo code:</p>
+            <div class="photo-code" id="photoCode"></div>
+            <p>Please show this code to your photographer.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registrationForm');
+            const confirmation = document.getElementById('confirmation');
+            const photoCodeDisplay = document.getElementById('photoCode');
+            const addEmailBtn = document.getElementById('addEmailBtn');
+            const additionalEmailsContainer = document.getElementById('additionalEmails');
+            const photoCodeField = document.getElementById('photoCodeField');
+            const generatedPhotoCode = document.getElementById('generatedPhotoCode');
+            const photoCodeInput = document.getElementById('photoCodeInput');
+            
+            // Add the first additional email field
+            addEmailField();
+            
+            // Function to add a new email input field
+            function addEmailField() {
+                const container = document.createElement('div');
+                container.className = 'additional-email-container';
+                
+                const input = document.createElement('input');
+                input.type = 'email';
+                input.className = 'additional-email';
+                input.name = 'additionalEmail[]';
+                input.placeholder = 'Additional contact email';
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'remove-email';
+                removeBtn.textContent = 'Remove';
+                removeBtn.addEventListener('click', function() {
+                    container.remove();
+                });
+                
+                container.appendChild(input);
+                container.appendChild(removeBtn);
+                additionalEmailsContainer.appendChild(container);
+            }
+            
+            // Event listener for adding email fields
+            addEmailBtn.addEventListener('click', addEmailField);
+            
+            // Generate a random alphanumeric string of specified length
+            function generateRandomString(length) {
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let result = '';
+                for (let i = 0; i < length; i++) {
+                    result += characters.charAt(Math.floor(Math.random() * characters.length));
+                }
+                return result;
+            }
+
+            // Generate photo code when shoot category is selected
+            document.querySelectorAll('input[name="shootCategory"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const prefix = this.value === 'individual' ? 'WS-I-' : 'WS-G-';
+                    const randomCode = generateRandomString(5);
+                    const photoCode = prefix + randomCode;
+                    
+                    photoCodeField.style.display = 'block';
+                    generatedPhotoCode.textContent = photoCode;
+                    photoCodeInput.value = photoCode;
+                });
+            });
+            
+            // Handle form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate form
+                if (!form.checkValidity()) {
+                    return;
+                }
+                
+                // Get the generated photo code
+                const photoCode = photoCodeInput.value;
+                
+                // Display the photo code in confirmation
+                photoCodeDisplay.textContent = photoCode;
+                
+                // Hide form and show confirmation
+                form.style.display = 'none';
+                confirmation.style.display = 'block';
+                
+                // Collect form data for submission to backend (if needed)
+                const formData = new FormData(form);
+                
+                // Here you would typically send the data to your server
+                // For example:
+                // fetch('/api/register', {
+                //     method: 'POST',
+                //     body: formData
+                // })
+                // .then(response => response.json())
+                // .then(data => console.log('Success:', data))
+                // .catch(error => console.error('Error:', error));
+            });
+        });
+    </script>
+</body>
+</html>
